@@ -1,0 +1,37 @@
+project: PhaseUnwarp
+tensorboard_log: ../PhaseUnwarp_log2/fpn_gauss_noise_add_background_rotate_MSE_exp1
+checkpoint_file: checkpoint_fpn_gauss_add_background_rotate_MSE_exp1.pth #保存模型的文件名
+config_save_file: config.log
+dataset:
+  type: PhaseUnwarpDataset_withtrans
+  train_args:
+    true_phase_dir: ../PhaseUnwarp_datagen/np_data/train30000/train
+    #trans_phase_dir: ../PhaseUnwarp_datagen/np_data/train30000/train_trans_phase_add_ground_rorate.npy
+  test_args:
+    true_phase_dir: ../PhaseUnwarp_datagen/np_data/test3000/test
+    #trans_phase_dir: ../PhaseUnwarp_datagen/np_data/test3000/test_trans_phase_add_ground_rorate.npy
+dataloader:
+  train_args:
+    batch_size: 48
+    shuffle: True
+  test_args:
+    batch_size: 48
+    shuffle: True
+optimizer:
+  type: Adam
+  args:
+    lr: 0.001
+model:
+  type: DebulrFPN
+  parallel: False
+  args:
+    in_channel: 4
+train:
+  epoch: 100
+metric:
+  - ssim
+  - psnr
+  - nmse
+loss:
+  - name: MSE_loss
+    factor: 1
